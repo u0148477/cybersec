@@ -1,0 +1,40 @@
+ociLinux:
+  hosts:
+    vm:
+      ansible_host: vm.duckdns.org
+      ansible_ssh_user: ubuntu
+      ansible_ssh_private_key_file: ~/.ssh/id_ed25519.ansible
+      ansible_become: yes
+      ansible_become_method: sudo
+      ansible_become_user: root
+    vm-gw:
+      ansible_host: vm-gw.duckdns.org
+      ansible_ssh_user: ubuntu
+      ansible_ssh_private_key_file: ~/.ssh/id_ed25519.ansible
+      ansible_become: yes
+      ansible_become_method: sudo
+      ansible_become_user: root
+
+#linodeLinux:
+#  hosts:
+#    vm:
+#      ansible_host: vm.duckdns.org
+
+cloud:
+  children:
+    ociLinux:
+    #linodeLinux:
+
+oracle:
+  children:
+    ociLinux:
+
+linuxSshd:
+  children:
+    ociLinux:
+    #linodeLinux:
+
+linuxFail2ban:
+  children:
+    ociLinux:
+    #linodeLinux:

@@ -1,0 +1,199 @@
+---
+- hosts: linuxSshd
+  #vars:
+    #NORMAL_USER_NAME: 'ubuntu'
+  tasks:
+
+    - name: unComment Protocol
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^#Protocol'
+        line: "Protocol 2"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: Securing Protocol
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^Protocol'
+        line: "Protocol 2"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: unComment Password Authentication
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^#PasswordAuthentication'
+        line: "PasswordAuthentication no"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: Disable Password Authentication
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^PasswordAuthentication'
+        line: "PasswordAuthentication no"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: unComment Public Key Authentication
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^#PubkeyAuthentication'
+        line: "PubkeyAuthentication yes"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: Enable Public Key Authentication
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^PubkeyAuthentication'
+        line: "PubkeyAuthentication yes"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: unComment Permit Empty Passwords
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^#PermitEmptyPasswords'
+        line: "PermitEmptyPasswords no"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: Disable Permit Empty Passwords
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^PermitEmptyPasswords'
+        line: "PermitEmptyPasswords no"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: unComment Root Login
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^#PermitRootLogin'
+        line: "PermitRootLogin no"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: Disable Root Login
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: "PermitRootLogin no"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: unComment MaxAuthTries
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^#MaxAuthTries'
+        line: "MaxAuthTries 6"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: Enable MaxAuthTries
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^MaxAuthTries'
+        line: "MaxAuthTries 6"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: unComment LoginGraceTime
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^#LoginGraceTime'
+        line: "LoginGraceTime 30"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: Enable LoginGraceTime
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^LoginGraceTime'
+        line: "LoginGraceTime 30"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: unComment X11Forwarding
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^#X11Forwarding'
+        line: "X11Forwarding no"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: Disable X11Forwarding
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^X11Forwarding'
+        line: "X11Forwarding no"
+        state: present
+        validate: /usr/sbin/sshd -t -f %s
+        backup: yes
+      notify:
+        - restart ssh
+
+  handlers:
+    #- name: restart ssh
+    #  service:
+    #    name: sshd
+    #    state: restarted
+    - name: restart ssh (with service)
+      service:
+        name: sshd
+        state: restarted
+      listen: "restart ssh"
+    #  when: ansible_service_mgr != 'systemd'
+    #- name: restart ssh (with systemd)
+    #  systemd:
+    #    name: sshd
+    #    state: restarted
+    #  listen: "restart ssh"
+    #  when: ansible_service_mgr == 'systemd'

@@ -1,0 +1,85 @@
+---
+- hosts: all
+  #remote_user: ubuntu
+  #vars:
+    #NORMAL_USER_NAME: 'ubuntu'
+  tasks:
+    - name: install anacron
+      package:
+        name: anacron
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: install aria2
+      package:
+        name: aria2
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: install cron
+      package:
+        name: cron
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: install curl
+      package:
+        name: curl
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: install fail2ban
+      package:
+        name: fail2ban
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: install screen
+      package:
+        name: screen
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: screenrc unComment autodetach
+      lineinfile:
+        dest=/etc/screenrc
+        regexp='^#autodetach'
+        line="autodetach on"
+        state=present
+        backup=yes
+
+    - name: screenrc enable autodetach
+      lineinfile:
+        dest=/etc/screenrc
+        regexp='^autodetach'
+        line="autodetach on"
+        state=present
+        backup=yes
+
+    - name: install tmux
+      package:
+        name: tmux
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: install vim-scripts
+      package:
+        name: vim-scripts
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: install wget
+      package:
+        name: wget
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+

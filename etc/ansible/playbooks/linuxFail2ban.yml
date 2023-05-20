@@ -1,0 +1,94 @@
+--- 
+- name: installs fail2ban on ansible hosts
+  hosts: linuxFail2ban
+  become: yes
+  tasks:
+  
+  - name: install fail2ban packages
+    package: 
+      #name: ['fail2ban', 'wget']   
+      name: fail2ban
+      state: latest
+      update_cache: yes
+      cache_valid_time: 3600
+
+  - name: Copy fail2ban.conf to fail2ban.local
+    ansible.builtin.copy:
+      src: /etc/fail2ban/fail2ban.conf
+      dest: /etc/fail2ban/fail2ban.local
+      remote_src: yes
+      force: false
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: Copy jail.conf to jail.local
+    ansible.builtin.copy:
+      src: /etc/fail2ban/jail.conf
+      dest: /etc/fail2ban/jail.local
+      remote_src: yes
+      force: false
+      owner: root
+      group: root
+      mode: '0644'
+
+#  - name: override the basic jail configuration with .conf file
+#    copy:
+#      src: /etc/fail2ban/jail.d/banaction.conf
+#      dest: /etc/fail2ban/jail.d/banaction.conf
+#      owner: root
+#      group: root
+#      mode: 0644
+#
+#   - name: Remove file (delete file)
+#     ansible.builtin.file:
+#         path: /etc/foo.txt
+#             state: absent
+
+  - name: banaction hostsdeny
+    ansible.builtin.lineinfile:
+      dest: /etc/fail2ban/jail.local
+      regexp: '^banaction = iptables-multiport'
+      line: "banaction = hostsdeny"
+      state: present
+      backup: yes
+    notify:
+      - restart fail2ban
+
+  - name: banaction_allports hostsdeny
+    ansible.builtin.lineinfile:
+      dest: /etc/fail2ban/jail.local
+      regexp: '^banaction_allports = iptables-allports'
+      line: "banaction_allports = hostsdeny"
+      state: present
+      backup: yes
+    notify:
+      - restart fail2ban
+
+  - name: actionunban hostsdeny
+    ansible.builtin.lineinfile:
+      dest: /etc/fail2ban/action.d/hostsdeny.conf
+      regexp: '^actionunban'
+      line: "actionunban = "
+      state: present
+      backup: yes
+    notify:
+      - restart fail2ban
+
+  handlers:
+    #- name: restart fail2ban
+    #  service:
+    #    name: fail2ban
+    #    state: restarted
+    - name: restart fail2ban (with service)
+      service:
+        name: fail2ban
+        state: restarted
+      listen: "restart fail2ban"
+    #  when: ansible_service_mgr != 'systemd'
+    #- name: restart fail2ban (with systemd)
+    #  systemd:
+    #    name: fail2ban
+    #    state: restarted
+    #  listen: "restart fail2ban"
+    #  when: ansible_service_mgr == 'systemd'
